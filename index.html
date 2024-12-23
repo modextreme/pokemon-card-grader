@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluador de Cartas Pokémon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        h1 {
+            color: #007bff;
+        }
+        input[type="file"] {
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Evaluador de Cartas Pokémon</h1>
+    <p>Sube una imagen de tu carta para evaluar su calidad.</p>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*" required>
+        <button type="submit">Evaluar Carta</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        const form = document.getElementById("uploadForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const fileInput = document.getElementById("fileInput");
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                const response = await fetch("https://kent-lights-sport-wm.trycloudflare.com/", {
+
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!response.ok) throw new Error("Error en la solicitud");
+                const data = await response.json();
+                document.getElementById("result").innerText = `Puntuación: ${data.puntuacion}, Defectos: ${data.defectos}`;
+            } catch (error) {
+
+                document.getElementById("result").innerText = "Ocurrió un error al procesar la imagen.";
+            }
+        });
+});
+    </script>
+
+body>
